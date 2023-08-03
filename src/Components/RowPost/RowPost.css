@@ -1,0 +1,36 @@
+.row{
+    margin-left: 20px;
+    color: #fff;
+}
+
+.posters{
+    display: flex;
+    padding: 20px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.posters::-webkit-scrollbar{
+    display: none;
+}
+
+.poster{
+    max-height: 230px;
+    margin-right: 10px;
+    transition: opacity 0.1s; 
+}
+.poster:hover {
+    opacity: 0.5; /* Reduce opacity on hover to create the effect */
+    padding: 1.5px;
+  }
+
+.smallPoster {
+    max-height: 150px;
+    margin-right: 10px;
+    transition: opacity 0.1s; 
+}
+
+.smallPoster:hover {
+    opacity: 0.5; /* Reduce opacity on hover to create the effect */
+    padding: 2px;
+  }
