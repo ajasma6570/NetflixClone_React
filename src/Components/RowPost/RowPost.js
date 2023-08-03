@@ -50,6 +50,7 @@ export default function RowPost(props) {
       <h2>{props.title}</h2>
       <div className="posters">
         {movies.map((obj) => (
+          <div key={obj.id} className="moviePoster">
           <img
             key={obj.id}
             onClick={() => handleMovie(obj.id)}
@@ -57,6 +58,8 @@ export default function RowPost(props) {
             src={`${imageUrl + obj.backdrop_path}`}
             alt="Poster"
           />
+          <p onClick={() => handleMovie(obj.id)} className="movieName" style={{cursor:"pointer"}}>{obj.title}</p>
+          </div>
         ))}
       </div>
 
