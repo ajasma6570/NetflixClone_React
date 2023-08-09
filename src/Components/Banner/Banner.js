@@ -3,11 +3,12 @@ import { API_KEY, imageUrl } from "../../Constants/Constants";
 import Youtube from "react-youtube";
 import axios from "../../axios";
 import "./Banner.css";
+import BannerShimmer from "../Shimmer/BannerShimmer";
 
 export default function Banner() {
   const [movie, setMovie] = useState();
   const [urlId, setUrlId] = useState("");
-  const [isPlayerOpen, setIsPlayerOpen] = useState(false);
+  const [isLoading,setLoading] = useState(true)
 
   useEffect(() => {
     axios
@@ -16,13 +17,25 @@ export default function Banner() {
       )
       .then((Response) => {
         console.log(Response.data);
-        setMovie(Response.data.results[18]);
+        setMovie(Response.data.results[2]);
+        setLoading(false)
       });
   }, []);
 
-  const handleMovie = () => {
-    setIsPlayerOpen(true);
-    setUrlId("eKl7NyhV6VA");
+  const handleMovie = (id) => {
+    axios.get(`movie/${id}/videos?api_key=${API_KEY}&language=en-US`).then((Response)=>{
+      try {
+        if (Response.data.results.length !== 0) {
+          console.log(Response.data.results[0]);
+          setUrlId(Response.data.results[0]);
+         
+        } else {
+          console.log("Trailer not available");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })
   };
 
   const opts = {
@@ -36,6 +49,11 @@ export default function Banner() {
 
   return (
     <>
+    {/* Shimmer container */}
+    {isLoading && <BannerShimmer />}
+  {/* Shimmer container End */}
+  
+    {!isLoading && (
       <div
         style={{
           backgroundImage: `URL(${
@@ -47,7 +65,7 @@ export default function Banner() {
         <div className="content">
           <h1 className="title">{movie ? movie.title : ""}</h1>
           <div className="banner-buttons">
-            <button className="button" onClick={handleMovie}>
+            <button className="button" onClick={()=>handleMovie(movie.id)}>
               Play
             </button>
             <button className="button">My list</button>
@@ -56,14 +74,14 @@ export default function Banner() {
         </div>
         <div className="fade_bottom"></div>
       </div>
-
-      {isPlayerOpen && (
+ ) }
+      {urlId && (
         <div className="playerContainer">
-          <Youtube opts={opts} videoId={urlId} />
+          <Youtube opts={opts} videoId={urlId.key} />
           <button
             style={{ float: "right", backgroundColor: "grey", width: "50px"}}
             className="closeButton"
-            onClick={() => setIsPlayerOpen(false)}
+            onClick={() => setUrlId('')}
           >
             Close
           </button>

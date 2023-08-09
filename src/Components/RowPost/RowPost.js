@@ -3,16 +3,19 @@ import Youtube from "react-youtube";
 import axios from "../../axios";
 import { API_KEY, imageUrl } from "../../Constants/Constants";
 import "./RowPost.css";
+import RowPostShimmer from "../Shimmer/RowPostShimmer";
 
 export default function RowPost(props) {
   const [movies, setMovies] = useState([]);
   const [urlId, setUrlId] = useState("");
+  const [isLoading,setLoading] = useState(true)
 
   useEffect(() => {
     axios
       .get(props.url)
       .then((Response) => {
         setMovies(Response.data.results);
+        setLoading(false)
       })
       .catch((error) => {
         console.log(error);
@@ -35,6 +38,7 @@ export default function RowPost(props) {
       .then((Response) => {
         try {
           if (Response.data.results.length !== 0) {
+            console.log(Response.data.results[0]);
             setUrlId(Response.data.results[0]);
           } else {
             console.log("Trailer not available");
@@ -46,6 +50,12 @@ export default function RowPost(props) {
   };
 
   return (
+    <>
+    {/* Shimmer container */}
+    {isLoading && <RowPostShimmer />} 
+    {/* Shimmer container End*/}
+
+  {!isLoading && (
     <div className="row">
       <h2>{props.title}</h2>
       <div className="posters">
@@ -63,7 +73,21 @@ export default function RowPost(props) {
         ))}
       </div>
 
-      {urlId && <Youtube opts={opts} videoId={urlId.key} />}
+      {urlId && (
+      <>
+      <Youtube opts={opts} videoId={urlId.key} />
+      <button
+      style={{ float: "right", backgroundColor: "grey", width: "50px"}}
+      className="closeButton"
+      onClick={() => setUrlId('')}
+    >
+      Close
+    </button>
+    </>
+    )}
     </div>
+    )}
+
+    </>
   );
 }
