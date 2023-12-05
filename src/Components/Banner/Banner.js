@@ -17,7 +17,7 @@ export default function Banner() {
       )
       .then((Response) => {
         console.log(Response.data);
-        setMovie(Response.data.results[2]);
+        setMovie(Response.data.results[11]);
         setLoading(false)
       });
   }, []);
